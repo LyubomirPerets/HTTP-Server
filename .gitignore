@@ -1,0 +1,16 @@
+# Compiled binaries (no file extension on Linux)
+server
+hello
+
+# Object files
+*.o
+*.a
+
+# Editor / IDE
+.vscode/
+*.swp
+*~
+
+# OS noise
+.DS_Store
+Thumbs.db
