@@ -1,15 +1,15 @@
 # HTTP Server in C
 
-A simple multi-process HTTP server written from scratch in C using POSIX sockets.
+A simple event-driven HTTP server written from scratch in C using POSIX sockets and `epoll`.
 
 ## Features
 - TCP socket-based server (default port 8080)
 - HTTP request line parsing (method, path, version) via bounded `sscanf`
 - Path-based routing to static HTML files
 - 404 handling for unknown routes
-- Concurrent client handling via `fork()`
+- Single-process client handling via `epoll`
 - `SO_REUSEADDR` for instant restart
-- Automatic zombie process reaping via `SIGCHLD` / `SIG_IGN`
+- Prometheus-style metrics at `/metrics`
 
 ## Build & Run
 
@@ -31,13 +31,12 @@ curl -i http://localhost:8080/nope  # returns 404
 ## Architecture
 
 - Single listening socket accepts connections in the main process loop.
-- Each accepted connection spawns a child process via `fork()` to handle the request.
-- Child closes the listening socket and exits after responding.
-- Parent immediately returns to `accept()` for the next client.
-- `SIGCHLD` is ignored so the kernel auto-reaps exited children, preventing zombies.
+- The listening socket and client sockets are registered with `epoll`.
+- Ready client sockets are handled without spawning child processes.
+- Each request is routed to a static HTML file, metrics output, or a 404 response.
 
 ## Roadmap
-- [ ] Replace fork-per-connection with `epoll` event loop (single-thread, scalable)
+- [x] Replace fork-per-connection with `epoll` event loop (single-thread, scalable)
 - [ ] HTTP/1.1 keep-alive connections
 - [ ] Chunked transfer encoding
 - [ ] HTTPS via OpenSSL
