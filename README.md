@@ -13,20 +13,16 @@ A simple event-driven HTTP server written from scratch in C using POSIX sockets 
 
 ## Build & Run
 
-\`\`\`bash
 gcc -Wall -Wextra -g server.c -o server
 ./server
-\`\`\`
 
 Then open `http://localhost:8080` in your browser.
 
 ## Testing
 
-\`\`\`bash
 curl http://localhost:8080/         # serves index.html
 curl http://localhost:8080/about    # serves about.html
 curl -i http://localhost:8080/nope  # returns 404
-\`\`\`
 
 ## Architecture
 
