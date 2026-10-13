@@ -110,6 +110,7 @@ void handle_client(int client_socket) {
 }
 
 int main() {
+    signal(SIGPIPE, SIG_IGN);
     int server_socket;
     struct sockaddr_in server_addr;
     
